@@ -1,4 +1,4 @@
-##' @useDynLib gonovax, .registration = TRUE
+##' @useDynLib gonovaxsentiment, .registration = TRUE
 ##' @importFrom odin odin
 NULL
 
