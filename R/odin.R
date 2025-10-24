@@ -18,7 +18,7 @@ model_ <- R6::R6Class(
       rhs_desolve = "model_rhs_desolve",
       initmod_desolve = "model_initmod_desolve",
       output_dde = "model_output_dde"),
-    dll = "gonovax",
+    dll = "gonovaxsentiment",
     user = c("A0", "beta_t", "diag_rec", "enr", "epsilon", "epsilon_hes",
              "eta_h_t", "eta_l_t", "exr", "hesgroupmatrix", "I0", "kappa",
              "mu", "notifiedprev", "nu", "p", "psi", "q", "rho", "S0",
@@ -32,22 +32,22 @@ model_ <- R6::R6Class(
     ## FFI registration system.
     registration = function() {
       if (FALSE) {
-        .C("model_rhs_dde", package = "gonovax")
-        .C("model_rhs_desolve", package = "gonovax")
-        .C("model_initmod_desolve", package = "gonovax")
-        .C("model_output_dde", package = "gonovax")
+        .C("model_rhs_dde", package = "gonovaxsentiment")
+        .C("model_rhs_desolve", package = "gonovaxsentiment")
+        .C("model_initmod_desolve", package = "gonovaxsentiment")
+        .C("model_output_dde", package = "gonovaxsentiment")
       }
     },
 
     ## This only does something in delay models
     set_initial = function(t, y, use_dde) {
       .Call("model_set_initial", private$ptr, t, y, use_dde,
-            PACKAGE= "gonovax")
+            PACKAGE= "gonovaxsentiment")
     },
 
     update_metadata = function() {
       meta <- .Call("model_metadata", private$ptr,
-                    PACKAGE = "gonovax")
+                    PACKAGE = "gonovaxsentiment")
       private$variable_order <- meta$variable_order
       private$output_order <- meta$output_order
       private$n_out <- meta$n_out
@@ -61,7 +61,7 @@ model_ <- R6::R6Class(
     initialize = function(..., user = list(...), use_dde = FALSE,
                           unused_user_action = NULL) {
       private$odin <- asNamespace("odin")
-      private$ptr <- .Call("model_create", user, PACKAGE = "gonovax")
+      private$ptr <- .Call("model_create", user, PACKAGE = "gonovaxsentiment")
       self$set_user(user = user, unused_user_action = unused_user_action)
       private$use_dde <- use_dde
       private$update_metadata()
@@ -69,7 +69,7 @@ model_ <- R6::R6Class(
 
     ir = function() {
       path_ir <- system.file("odin/model.json", mustWork = TRUE,
-                             package = "gonovax")
+                             package = "gonovaxsentiment")
       json <- readLines(path_ir)
       class(json) <- "json"
       json
@@ -79,7 +79,7 @@ model_ <- R6::R6Class(
     ## nice, but that's not super straightforward to do.
     set_user = function(..., user = list(...), unused_user_action = NULL) {
       private$odin$support_check_user(user, private$user, unused_user_action)
-      .Call("model_set_user", private$ptr, user, PACKAGE = "gonovax")
+      .Call("model_set_user", private$ptr, user, PACKAGE = "gonovaxsentiment")
       private$update_metadata()
     },
 
@@ -89,11 +89,11 @@ model_ <- R6::R6Class(
     ## closer to the js version which requires that we always pass the
     ## time in.
     initial = function(t) {
-      .Call("model_initial_conditions", private$ptr, t, PACKAGE = "gonovax")
+      .Call("model_initial_conditions", private$ptr, t, PACKAGE = "gonovaxsentiment")
     },
 
     rhs = function(t, y) {
-      .Call("model_rhs_r", private$ptr, t, y, PACKAGE = "gonovax")
+      .Call("model_rhs_r", private$ptr, t, y, PACKAGE = "gonovaxsentiment")
     },
 
     deriv = function(t, y) {
@@ -101,7 +101,7 @@ model_ <- R6::R6Class(
     },
 
     contents = function() {
-      .Call("model_contents", private$ptr, PACKAGE = "gonovax")
+      .Call("model_contents", private$ptr, PACKAGE = "gonovaxsentiment")
     },
 
     transform_variables = function(y) {
@@ -146,7 +146,7 @@ model_trial_ <- R6::R6Class(
       rhs_desolve = "model_trial_rhs_desolve",
       initmod_desolve = "model_trial_initmod_desolve",
       output_dde = "model_trial_output_dde"),
-    dll = "gonovax",
+    dll = "gonovaxsentiment",
     user = c("A0", "diag_rec_a", "diag_rec_s", "eta", "I0", "lambda", "mu",
              "nu", "psi", "rho", "S0", "sigma", "T0", "U0", "vea", "ved",
              "ves", "w", "n_vax"),
@@ -157,22 +157,22 @@ model_trial_ <- R6::R6Class(
     ## FFI registration system.
     registration = function() {
       if (FALSE) {
-        .C("model_trial_rhs_dde", package = "gonovax")
-        .C("model_trial_rhs_desolve", package = "gonovax")
-        .C("model_trial_initmod_desolve", package = "gonovax")
-        .C("model_trial_output_dde", package = "gonovax")
+        .C("model_trial_rhs_dde", package = "gonovaxsentiment")
+        .C("model_trial_rhs_desolve", package = "gonovaxsentiment")
+        .C("model_trial_initmod_desolve", package = "gonovaxsentiment")
+        .C("model_trial_output_dde", package = "gonovaxsentiment")
       }
     },
 
     ## This only does something in delay models
     set_initial = function(t, y, use_dde) {
       .Call("model_trial_set_initial", private$ptr, t, y, use_dde,
-            PACKAGE= "gonovax")
+            PACKAGE= "gonovaxsentiment")
     },
 
     update_metadata = function() {
       meta <- .Call("model_trial_metadata", private$ptr,
-                    PACKAGE = "gonovax")
+                    PACKAGE = "gonovaxsentiment")
       private$variable_order <- meta$variable_order
       private$output_order <- meta$output_order
       private$n_out <- meta$n_out
@@ -186,7 +186,7 @@ model_trial_ <- R6::R6Class(
     initialize = function(..., user = list(...), use_dde = FALSE,
                           unused_user_action = NULL) {
       private$odin <- asNamespace("odin")
-      private$ptr <- .Call("model_trial_create", user, PACKAGE = "gonovax")
+      private$ptr <- .Call("model_trial_create", user, PACKAGE = "gonovaxsentiment")
       self$set_user(user = user, unused_user_action = unused_user_action)
       private$use_dde <- use_dde
       private$update_metadata()
@@ -194,7 +194,7 @@ model_trial_ <- R6::R6Class(
 
     ir = function() {
       path_ir <- system.file("odin/model_trial.json", mustWork = TRUE,
-                             package = "gonovax")
+                             package = "gonovaxsentiment")
       json <- readLines(path_ir)
       class(json) <- "json"
       json
@@ -204,7 +204,7 @@ model_trial_ <- R6::R6Class(
     ## nice, but that's not super straightforward to do.
     set_user = function(..., user = list(...), unused_user_action = NULL) {
       private$odin$support_check_user(user, private$user, unused_user_action)
-      .Call("model_trial_set_user", private$ptr, user, PACKAGE = "gonovax")
+      .Call("model_trial_set_user", private$ptr, user, PACKAGE = "gonovaxsentiment")
       private$update_metadata()
     },
 
@@ -214,11 +214,11 @@ model_trial_ <- R6::R6Class(
     ## closer to the js version which requires that we always pass the
     ## time in.
     initial = function(t) {
-      .Call("model_trial_initial_conditions", private$ptr, t, PACKAGE = "gonovax")
+      .Call("model_trial_initial_conditions", private$ptr, t, PACKAGE = "gonovaxsentiment")
     },
 
     rhs = function(t, y) {
-      .Call("model_trial_rhs_r", private$ptr, t, y, PACKAGE = "gonovax")
+      .Call("model_trial_rhs_r", private$ptr, t, y, PACKAGE = "gonovaxsentiment")
     },
 
     deriv = function(t, y) {
@@ -226,7 +226,7 @@ model_trial_ <- R6::R6Class(
     },
 
     contents = function() {
-      .Call("model_trial_contents", private$ptr, PACKAGE = "gonovax")
+      .Call("model_trial_contents", private$ptr, PACKAGE = "gonovaxsentiment")
     },
 
     transform_variables = function(y) {
@@ -268,7 +268,7 @@ model_trial_stochastic_ <- R6::R6Class(
     interpolate_t = NULL,
     cfuns = list(
       rhs_dde = "model_trial_stochastic_rhs_dde"),
-    dll = "gonovax",
+    dll = "gonovaxsentiment",
     user = c("A0", "D", "diag_rec_a", "diag_rec_s", "eta", "I0", "lambda",
              "mu", "nu", "psi", "rho", "S0", "sigma", "T0", "U0", "vea",
              "ved", "ves", "w", "n_vax"),
@@ -279,19 +279,19 @@ model_trial_stochastic_ <- R6::R6Class(
     ## FFI registration system.
     registration = function() {
       if (FALSE) {
-        .C("model_trial_stochastic_rhs_dde", package = "gonovax")
+        .C("model_trial_stochastic_rhs_dde", package = "gonovaxsentiment")
       }
     },
 
     ## This only does something in delay models
     set_initial = function(step, y, use_dde) {
       .Call("model_trial_stochastic_set_initial", private$ptr, step, y, use_dde,
-            PACKAGE= "gonovax")
+            PACKAGE= "gonovaxsentiment")
     },
 
     update_metadata = function() {
       meta <- .Call("model_trial_stochastic_metadata", private$ptr,
-                    PACKAGE = "gonovax")
+                    PACKAGE = "gonovaxsentiment")
       private$variable_order <- meta$variable_order
       private$output_order <- meta$output_order
       private$n_out <- meta$n_out
@@ -305,7 +305,7 @@ model_trial_stochastic_ <- R6::R6Class(
     initialize = function(..., user = list(...), use_dde = FALSE,
                           unused_user_action = NULL) {
       private$odin <- asNamespace("odin")
-      private$ptr <- .Call("model_trial_stochastic_create", user, PACKAGE = "gonovax")
+      private$ptr <- .Call("model_trial_stochastic_create", user, PACKAGE = "gonovaxsentiment")
       self$set_user(user = user, unused_user_action = unused_user_action)
       private$use_dde <- use_dde
       private$update_metadata()
@@ -313,7 +313,7 @@ model_trial_stochastic_ <- R6::R6Class(
 
     ir = function() {
       path_ir <- system.file("odin/model_trial_stochastic.json", mustWork = TRUE,
-                             package = "gonovax")
+                             package = "gonovaxsentiment")
       json <- readLines(path_ir)
       class(json) <- "json"
       json
@@ -323,7 +323,7 @@ model_trial_stochastic_ <- R6::R6Class(
     ## nice, but that's not super straightforward to do.
     set_user = function(..., user = list(...), unused_user_action = NULL) {
       private$odin$support_check_user(user, private$user, unused_user_action)
-      .Call("model_trial_stochastic_set_user", private$ptr, user, PACKAGE = "gonovax")
+      .Call("model_trial_stochastic_set_user", private$ptr, user, PACKAGE = "gonovaxsentiment")
       private$update_metadata()
     },
 
@@ -333,11 +333,11 @@ model_trial_stochastic_ <- R6::R6Class(
     ## closer to the js version which requires that we always pass the
     ## time in.
     initial = function(step) {
-      .Call("model_trial_stochastic_initial_conditions", private$ptr, step, PACKAGE = "gonovax")
+      .Call("model_trial_stochastic_initial_conditions", private$ptr, step, PACKAGE = "gonovaxsentiment")
     },
 
     rhs = function(step, y) {
-      .Call("model_trial_stochastic_rhs_r", private$ptr, step, y, PACKAGE = "gonovax")
+      .Call("model_trial_stochastic_rhs_r", private$ptr, step, y, PACKAGE = "gonovaxsentiment")
     },
 
     update = function(step, y) {
@@ -345,7 +345,7 @@ model_trial_stochastic_ <- R6::R6Class(
     },
 
     contents = function() {
-      .Call("model_trial_stochastic_contents", private$ptr, PACKAGE = "gonovax")
+      .Call("model_trial_stochastic_contents", private$ptr, PACKAGE = "gonovaxsentiment")
     },
 
     transform_variables = function(y) {
@@ -390,7 +390,7 @@ model_withouthistory_ <- R6::R6Class(
       rhs_desolve = "model_withouthistory_rhs_desolve",
       initmod_desolve = "model_withouthistory_initmod_desolve",
       output_dde = "model_withouthistory_output_dde"),
-    dll = "gonovax",
+    dll = "gonovaxsentiment",
     user = c("A0", "beta_t", "enr", "epsilon", "eta_h_t", "eta_l_t", "exr",
              "I0", "mu", "nu", "p", "psi", "q", "rho", "S0", "sigma", "T0",
              "tt", "u", "u_vbe", "U0", "vax_t", "vax_y", "vbe", "vea", "ved",
@@ -402,22 +402,22 @@ model_withouthistory_ <- R6::R6Class(
     ## FFI registration system.
     registration = function() {
       if (FALSE) {
-        .C("model_withouthistory_rhs_dde", package = "gonovax")
-        .C("model_withouthistory_rhs_desolve", package = "gonovax")
-        .C("model_withouthistory_initmod_desolve", package = "gonovax")
-        .C("model_withouthistory_output_dde", package = "gonovax")
+        .C("model_withouthistory_rhs_dde", package = "gonovaxsentiment")
+        .C("model_withouthistory_rhs_desolve", package = "gonovaxsentiment")
+        .C("model_withouthistory_initmod_desolve", package = "gonovaxsentiment")
+        .C("model_withouthistory_output_dde", package = "gonovaxsentiment")
       }
     },
 
     ## This only does something in delay models
     set_initial = function(t, y, use_dde) {
       .Call("model_withouthistory_set_initial", private$ptr, t, y, use_dde,
-            PACKAGE= "gonovax")
+            PACKAGE= "gonovaxsentiment")
     },
 
     update_metadata = function() {
       meta <- .Call("model_withouthistory_metadata", private$ptr,
-                    PACKAGE = "gonovax")
+                    PACKAGE = "gonovaxsentiment")
       private$variable_order <- meta$variable_order
       private$output_order <- meta$output_order
       private$n_out <- meta$n_out
@@ -431,7 +431,7 @@ model_withouthistory_ <- R6::R6Class(
     initialize = function(..., user = list(...), use_dde = FALSE,
                           unused_user_action = NULL) {
       private$odin <- asNamespace("odin")
-      private$ptr <- .Call("model_withouthistory_create", user, PACKAGE = "gonovax")
+      private$ptr <- .Call("model_withouthistory_create", user, PACKAGE = "gonovaxsentiment")
       self$set_user(user = user, unused_user_action = unused_user_action)
       private$use_dde <- use_dde
       private$update_metadata()
@@ -439,7 +439,7 @@ model_withouthistory_ <- R6::R6Class(
 
     ir = function() {
       path_ir <- system.file("odin/model_withouthistory.json", mustWork = TRUE,
-                             package = "gonovax")
+                             package = "gonovaxsentiment")
       json <- readLines(path_ir)
       class(json) <- "json"
       json
@@ -449,7 +449,7 @@ model_withouthistory_ <- R6::R6Class(
     ## nice, but that's not super straightforward to do.
     set_user = function(..., user = list(...), unused_user_action = NULL) {
       private$odin$support_check_user(user, private$user, unused_user_action)
-      .Call("model_withouthistory_set_user", private$ptr, user, PACKAGE = "gonovax")
+      .Call("model_withouthistory_set_user", private$ptr, user, PACKAGE = "gonovaxsentiment")
       private$update_metadata()
     },
 
@@ -459,11 +459,11 @@ model_withouthistory_ <- R6::R6Class(
     ## closer to the js version which requires that we always pass the
     ## time in.
     initial = function(t) {
-      .Call("model_withouthistory_initial_conditions", private$ptr, t, PACKAGE = "gonovax")
+      .Call("model_withouthistory_initial_conditions", private$ptr, t, PACKAGE = "gonovaxsentiment")
     },
 
     rhs = function(t, y) {
-      .Call("model_withouthistory_rhs_r", private$ptr, t, y, PACKAGE = "gonovax")
+      .Call("model_withouthistory_rhs_r", private$ptr, t, y, PACKAGE = "gonovaxsentiment")
     },
 
     deriv = function(t, y) {
@@ -471,7 +471,7 @@ model_withouthistory_ <- R6::R6Class(
     },
 
     contents = function() {
-      .Call("model_withouthistory_contents", private$ptr, PACKAGE = "gonovax")
+      .Call("model_withouthistory_contents", private$ptr, PACKAGE = "gonovaxsentiment")
     },
 
     transform_variables = function(y) {
@@ -516,7 +516,7 @@ model_withoutPN_ <- R6::R6Class(
       rhs_desolve = "model_withoutPN_rhs_desolve",
       initmod_desolve = "model_withoutPN_initmod_desolve",
       output_dde = "model_withoutPN_output_dde"),
-    dll = "gonovax",
+    dll = "gonovaxsentiment",
     user = c("A0", "beta_t", "diag_rec", "enr", "epsilon", "eta_h_t",
              "eta_l_t", "exr", "I0", "mu", "nu", "p", "psi", "q", "rho",
              "S0", "sigma", "T0", "tt", "u_d", "u_s", "u_vbe", "U0", "vax_t",
@@ -529,22 +529,22 @@ model_withoutPN_ <- R6::R6Class(
     ## FFI registration system.
     registration = function() {
       if (FALSE) {
-        .C("model_withoutPN_rhs_dde", package = "gonovax")
-        .C("model_withoutPN_rhs_desolve", package = "gonovax")
-        .C("model_withoutPN_initmod_desolve", package = "gonovax")
-        .C("model_withoutPN_output_dde", package = "gonovax")
+        .C("model_withoutPN_rhs_dde", package = "gonovaxsentiment")
+        .C("model_withoutPN_rhs_desolve", package = "gonovaxsentiment")
+        .C("model_withoutPN_initmod_desolve", package = "gonovaxsentiment")
+        .C("model_withoutPN_output_dde", package = "gonovaxsentiment")
       }
     },
 
     ## This only does something in delay models
     set_initial = function(t, y, use_dde) {
       .Call("model_withoutPN_set_initial", private$ptr, t, y, use_dde,
-            PACKAGE= "gonovax")
+            PACKAGE= "gonovaxsentiment")
     },
 
     update_metadata = function() {
       meta <- .Call("model_withoutPN_metadata", private$ptr,
-                    PACKAGE = "gonovax")
+                    PACKAGE = "gonovaxsentiment")
       private$variable_order <- meta$variable_order
       private$output_order <- meta$output_order
       private$n_out <- meta$n_out
@@ -558,7 +558,7 @@ model_withoutPN_ <- R6::R6Class(
     initialize = function(..., user = list(...), use_dde = FALSE,
                           unused_user_action = NULL) {
       private$odin <- asNamespace("odin")
-      private$ptr <- .Call("model_withoutPN_create", user, PACKAGE = "gonovax")
+      private$ptr <- .Call("model_withoutPN_create", user, PACKAGE = "gonovaxsentiment")
       self$set_user(user = user, unused_user_action = unused_user_action)
       private$use_dde <- use_dde
       private$update_metadata()
@@ -566,7 +566,7 @@ model_withoutPN_ <- R6::R6Class(
 
     ir = function() {
       path_ir <- system.file("odin/model_withoutPN.json", mustWork = TRUE,
-                             package = "gonovax")
+                             package = "gonovaxsentiment")
       json <- readLines(path_ir)
       class(json) <- "json"
       json
@@ -576,7 +576,7 @@ model_withoutPN_ <- R6::R6Class(
     ## nice, but that's not super straightforward to do.
     set_user = function(..., user = list(...), unused_user_action = NULL) {
       private$odin$support_check_user(user, private$user, unused_user_action)
-      .Call("model_withoutPN_set_user", private$ptr, user, PACKAGE = "gonovax")
+      .Call("model_withoutPN_set_user", private$ptr, user, PACKAGE = "gonovaxsentiment")
       private$update_metadata()
     },
 
@@ -586,11 +586,11 @@ model_withoutPN_ <- R6::R6Class(
     ## closer to the js version which requires that we always pass the
     ## time in.
     initial = function(t) {
-      .Call("model_withoutPN_initial_conditions", private$ptr, t, PACKAGE = "gonovax")
+      .Call("model_withoutPN_initial_conditions", private$ptr, t, PACKAGE = "gonovaxsentiment")
     },
 
     rhs = function(t, y) {
-      .Call("model_withoutPN_rhs_r", private$ptr, t, y, PACKAGE = "gonovax")
+      .Call("model_withoutPN_rhs_r", private$ptr, t, y, PACKAGE = "gonovaxsentiment")
     },
 
     deriv = function(t, y) {
@@ -598,7 +598,7 @@ model_withoutPN_ <- R6::R6Class(
     },
 
     contents = function() {
-      .Call("model_withoutPN_contents", private$ptr, PACKAGE = "gonovax")
+      .Call("model_withoutPN_contents", private$ptr, PACKAGE = "gonovaxsentiment")
     },
 
     transform_variables = function(y) {

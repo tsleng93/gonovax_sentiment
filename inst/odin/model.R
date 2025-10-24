@@ -84,21 +84,21 @@ screened[, ] <- eta[i] * U[i, j]
 
 #Calculations required for partner notification
 
-Cp[] <- sum(C[i, ]) * p[i]
+#Cp[] <- sum(C[i, ]) * p[i]
 Up[] <- sum(U[i, ]) * p[i]
 
-omega_C[, ] <- (1 - epsilon) * Cp[j] / sum(Cp[]) + (if (i == j) epsilon else 0)
+#omega_C[, ] <- (1 - epsilon) * Cp[j] / sum(Cp[]) + (if (i == j) epsilon else 0)
 omega_U[, ] <- (1 - epsilon) * Up[j] / sum(Up[]) + (if (i == j) epsilon else 0)
 prop_UUsubgroup[, ] <- U[i, j] / sum(U[i, ])
-prop_CCsubgroup[, ] <- C[i, j] / sum(C[i, ])
+#prop_CCsubgroup[, ] <- C[i, j] / sum(C[i, ])
 
 omega_U_withdiag[, ] <- omega_U[i, j] * (mu * sum(S[i, ]) + eta[i] *
                                            sum(A[i, ]))
-omega_C_withdiag[, ] <- omega_C[i, j] * (mu * sum(S[i, ]) + eta[i] *
-                                           sum(A[i, ]))
+#omega_C_withdiag[, ] <- omega_C[i, j] * (mu * sum(S[i, ]) + eta[i] *
+#                                           sum(A[i, ]))
 
 omega_U_withdiag_rg[] <- sum(omega_U_withdiag[, i])
-omega_C_withdiag_rg[] <- sum(omega_C_withdiag[, i])
+#omega_C_withdiag_rg[] <- sum(omega_C_withdiag[, i])
 
 #new simplified way
 
@@ -107,11 +107,11 @@ phi[, ] <- (1 - notifiedprev) * kappa * omega_U_withdiag_rg[i] *
   prop_UUsubgroup[i, j]
 
 #notifcations to infected
-xi[, ] <- notifiedprev * kappa * omega_C_withdiag_rg[i] * prop_CCsubgroup[i, j]
+#xi[, ] <- notifiedprev * kappa * omega_C_withdiag_rg[i] * prop_CCsubgroup[i, j]
 
 
-notifiedandattended[, ] <- if (phi[i, j] + xi[i, j] > 0)
-  phi[i, j] + xi[i, j] else 0
+#notifiedandattended[, ] <- if (phi[i, j] + xi[i, j] > 0)
+#  phi[i, j] + xi[i, j] else 0
 
 
 # mechanism to record number of times infected by moving diagnosed
@@ -143,7 +143,7 @@ n_vopn[, , ] <- n_oopn[i, j, k] * u_pn[i, j, k]
 
 
 ## numbers vaccinated and number of doses
-n_vac[, ] <- n_vos[i,j,j] + n_vod[i,j,j] + n_vbe[i,j,j] + n_vopn[i,j,j]
+#n_vac[, ] <- n_vos[i,j,j] + n_vod[i,j,j] + n_vbe[i,j,j] + n_vopn[i,j,j]
 n_doses[,,] <- if (j == k) 0 else -1*(n_vos[i,j,k] + n_vod[i,j,k] + n_vbe[i,j,k] + n_vopn[i,j,k])*stratum_doses[j]
 
 
@@ -273,19 +273,19 @@ dim(screened) <- c(n_group, n_vax)
 
 #quantities added for PN
 dim(Up) <- n_group
-dim(Cp)     <- n_group
+#dim(Cp)     <- n_group
 dim(omega_U) <- c(n_group, n_group)
-dim(omega_C) <- c(n_group, n_group)
+#dim(omega_C) <- c(n_group, n_group)
 dim(omega_U_withdiag) <- c(n_group, n_group)
-dim(omega_C_withdiag) <- c(n_group, n_group)
+#dim(omega_C_withdiag) <- c(n_group, n_group)
 dim(omega_U_withdiag_rg) <- n_group
-dim(omega_C_withdiag_rg) <- n_group
+#dim(omega_C_withdiag_rg) <- n_group
 dim(prop_UUsubgroup) <- c(n_group, n_vax)
-dim(prop_CCsubgroup) <- c(n_group, n_vax)
+#dim(prop_CCsubgroup) <- c(n_group, n_vax)
 dim(phi) <- c(n_group, n_vax)
-dim(xi) <- c(n_group, n_vax)
+#dim(xi) <- c(n_group, n_vax)
 
-dim(notifiedandattended) <- c(n_group, n_vax)
+#dim(notifiedandattended) <- c(n_group, n_vax)
 
 
 dim(cum_incid)       <- c(n_group, n_vax)
@@ -409,7 +409,7 @@ dim(n_vod) <- c(n_group, n_vax, n_vax)
 
 dim(n_vopn) <- c(n_group, n_vax, n_vax)
 
-dim(n_vac) <- c(n_group, n_vax)
+#dim(n_vac) <- c(n_group, n_vax)
 dim(n_doses) <- c(n_group, n_vax, n_vax)
 
 dim(stratum_doses) <- c(n_vax)

@@ -3,7 +3,7 @@
 }
 
 gonovax_file <- function(...) {
-  system.file(..., package = "gonovax", mustWork = TRUE)
+  system.file(..., package = "gonovaxsentiment", mustWork = TRUE)
 }
 
 read_csv <- function(...) {
